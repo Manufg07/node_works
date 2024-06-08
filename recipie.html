@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Finder</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .recipe { border: 1px solid #f7e11a; padding: 10px; margin: 10px 0; }
+        .favorite { color: red; cursor: pointer; }
+    </style>
+</head>
+<body style="background-color: rgb(230, 236, 234);" >
+    
+
+    <h2>Add New Recipe</h2>
+    <form id="new-recipe-form">
+        <input type="text" id="new-recipe-name" placeholder="Recipe Name" required>
+        <input type="text" id="new-recipe-ingredients" placeholder="Ingredients (comma separated)" required>
+        <button type="submit">Add Recipe</button>
+    </form>
+    
+    <h1>Recipe Finder</h1>
+    <form id="ingredient-form">
+        <input type="text" id="ingredients" placeholder="Enter ingredients (comma separated)" required>
+        <button type="submit">Search</button>
+    </form>
+    
+    <h2>Recipes</h2>
+    <div id="recipe-list"></div>
+
+
+    <h2>Favorites</h2>
+    <div id="favorite-list" style="background-color: tomato;"></div>
+    <script> 
+ 
+var recipes = [
+
+];
+
+var nextRecipeId = 1;
+
+
+function saveFavorites(favorites) {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+
+function getFavorites() {
+    var favorites = localStorage.getItem('favorites');
+    return favorites ? JSON.parse(favorites) : [];
+}
+
+
+function displayRecipes(recipeArray, elementId) {
+    var container = document.getElementById(elementId);
+    container.innerHTML = '';
+    recipeArray.forEach(function(recipe) {
+        var recipeDiv = document.createElement('div');
+        recipeDiv.className = 'recipe';
+        recipeDiv.innerHTML = `
+            <h3>${recipe.name}</h3>
+            <p>Ingredients: ${recipe.ingredients.join(', ')}</p>
+            <button class="favorite" data-id="${recipe.id}">&#9733; Add to Favorites</button>
+        `;
+        container.appendChild(recipeDiv);
+    });
+}
+
+
+document.getElementById('ingredient-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var ingredients = document.getElementById('ingredients').value.split(',').map(function(ingredient) {
+        return ingredient.trim().toLowerCase();
+    });
+    var filteredRecipes = recipes.filter(function(recipe) {
+        return ingredients.every(function(ingredient) {
+            return recipe.ingredients.includes(ingredient);
+        });
+    });
+    displayRecipes(filteredRecipes, 'recipe-list');
+});
+
+
+document.getElementById('recipe-list').addEventListener('click', function(event) {
+    if (event.target.classList.contains('favorite')) {
+        var recipeId = parseInt(event.target.getAttribute('data-id'));
+        var recipe = recipes.find(function(recipe) {
+            return recipe.id === recipeId;
+        });
+        var favorites = getFavorites();
+        if (!favorites.some(function(fav) {
+            return fav.id === recipeId;
+        })) {
+            favorites.push(recipe);
+            saveFavorites(favorites);
+            displayFavorites();
+        }
+    }
+});
+
+
+function displayFavorites() {
+    var favorites = getFavorites();
+    var container = document.getElementById('favorite-list');
+    container.innerHTML = '';
+    favorites.forEach(function(recipe) {
+        var recipeDiv = document.createElement('div');
+        recipeDiv.className = 'recipe';
+        recipeDiv.innerHTML = `
+            <h3>${recipe.name}</h3>
+            <p>Ingredients: ${recipe.ingredients.join(', ')}</p>
+            <button class="remove-favorite" data-id="${recipe.id}">&#10060; Remove from Favorites</button>
+        `;
+        container.appendChild(recipeDiv);
+    });
+}
+
+
+document.getElementById('favorite-list').addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-favorite')) {
+        var recipeId = parseInt(event.target.getAttribute('data-id'));
+        var favorites = getFavorites().filter(function(recipe) {
+            return recipe.id !== recipeId;
+        });
+        saveFavorites(favorites);
+        displayFavorites();
+    }
+});
+
+
+document.getElementById('new-recipe-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var name = document.getElementById('new-recipe-name').value;
+    var ingredients = document.getElementById('new-recipe-ingredients').value.split(',').map(function(ingredient) {
+        return ingredient.trim().toLowerCase();
+    });
+    var newRecipe = { name: name, ingredients: ingredients, id: nextRecipeId++ };
+    recipes.push(newRecipe);
+    alert('Recipe added!');
+    document.getElementById('new-recipe-form').reset();
+});
+
+
+displayFavorites();
+
+    </script>
+</body>
+</html>
