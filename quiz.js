@@ -65,8 +65,8 @@ function Score() {
     //  nextButton.innerHTML=startQuiz();
     answerFormElement.innerHTML = '';
     timerElement.innerText = '';
-    // nextButton.removeEventListener('click', handleNextButton); // Remove the existing event listener
-    nextButton.addEventListener('click', startQuiz); // Add event listener to restart the quiz
+    // nextButton.removeEventListener('click', handleNextButton); // 
+    nextButton.addEventListener('click', startQuiz); // 
 }
 
 
