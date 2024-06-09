@@ -1,6 +1,5 @@
 const questions = [
     { question: "Who is the first president of India?", answers: ["Dr.Ambedkar", "Dr.Rajendra prasad", "Sarvepalli Radhakrishnan", "K R Narayanan"], correct: "Dr.Rajendra prasad" },
-    { question: "Who is the CEO of Tesla?", answers: ["Bill Gates", "Elon Musk", "Jeff Bezos", "Mark Zuckerberg"], correct: "Elon Musk" },
     { question: "What is the capital of India?", answers: ["Kerala", "Mumbai", "New Delhi", "Tamilnadu"], correct: "New Delhi" },
     { question: "What is the name of the first cryptocurrency?", answers: ["Bitcoin (BTC)","Ethereum (ETH)","Tether (USDT)","Binance Coin (BNB)"], correct: "Bitcoin (BTC)" }
 ];
